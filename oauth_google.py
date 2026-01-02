@@ -22,15 +22,23 @@ def verify_google_id_token(token: str):
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="無效的 Google Token"
         )
-def exchange_code_for_tokenas(code: str, redirect_uri: str)-> dict:
-    """使用授權碼向 Google 換取 ID Token 和 Access Token"""
+
+
+def exchange_code_for_tokens(code: str, redirect_uri: str) -> dict:
+    """
+    [架構 A] 用 Authorization Code 換取 tokens
+
+    這個動作必須在後端執行，因為需要 client_secret！
+    前端只負責：1. 導向 Google  2. 收到 code  3. 把 code 傳給後端
+    """
     payload = {
-        'code': code,
-        'client_id': GOOGLE_CLIENT_ID,
-        'client_secret': GOOGLE_CLIENT_SECRET,
-        'redirect_uri': redirect_uri,
-        'grant_type': 'authorization_code'
+        "code": code,
+        "client_id": GOOGLE_CLIENT_ID,
+        "client_secret": GOOGLE_CLIENT_SECRET,  # ⚠️ 機密！只能放後端
+        "redirect_uri": redirect_uri,
+        "grant_type": "authorization_code",
     }
+
     response = requests.post(GOOGLE_TOKEN_URL, data=payload)
 
     if response.status_code != 200:
@@ -38,4 +46,5 @@ def exchange_code_for_tokenas(code: str, redirect_uri: str)-> dict:
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail=f"無法換取 Token: {response.json().get('error_description', '未知錯誤')}"
         )
-    return response.json()  # 包含 access_token, id_token 等資訊
+
+    return response.json()  # 包含 access_token, id_token, refresh_token
