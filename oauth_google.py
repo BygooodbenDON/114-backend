@@ -22,7 +22,7 @@ def verify_google_id_token(token: str):
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="無效的 Google Token"
         )
-def exchange_code_for_token(code: str, redirect_uri: str)-> dict:
+def exchange_code_for_tokenas(code: str, redirect_uri: str)-> dict:
     """使用授權碼向 Google 換取 ID Token 和 Access Token"""
     payload = {
         'code': code,
