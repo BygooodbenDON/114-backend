@@ -3,7 +3,7 @@ load_dotenv()
 
 from fastapi import FastAPI, Depends, HTTPException, status
 from pydantic import BaseModel
-from oauth_google import verify_google_id_token, exchange_code_for_tokens
+from google_oauth import verify_google_id_token, exchange_code_for_tokens
 from auth_utils import create_access_token, get_current_user_email
 
 app = FastAPI(title="資工系 114-Backend 示範專案")
